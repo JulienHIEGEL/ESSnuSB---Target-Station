@@ -1,0 +1,40 @@
+# flair project file
+Version: 300
+Mode: fluka
+md5: 515dae6d02f529630ac92353e3899a9b
+Input:
+*
+* ----- Target and Horn materials -----
+*
+MATERIAL TITAN60 22.,, 3.
+ASSIGNMA , TITAN60 TARGET
+ASSIGNMA , TITANIUM CANIBOX
+ASSIGNMA , HELIUM CANICOOL
+ASSIGNMA , HELIUM THBOX
+ASSIGNMA , ALUMINUM RHALUP
+ASSIGNMA , HELIUM RHBF,,, 1.
+ASSIGNMA , HELIUM RHIN
+*
+* ----- Collimator materials -----
+*
+ASSIGNMA , IRON CLMT
+ASSIGNMA , HELIUM CLMTHOLE
+ASSIGNMA , TUNGSTEN CLMTW
+*
+* ----- Dipole materials -----
+*
+ASSIGNMA , IRON MAGNET
+ASSIGNMA , HELIUM BFIELD,,, 1.
+ASSIGNMA , COPPER COIL
+*
+* ----- BeamDump and TTline materials -----
+*
+ASSIGNMA , CARBON BDUMP
+ASSIGNMA , HELIUM TTLINE
+EndInput
+
+Page: Flair
+
+# Run information
+Run: <default>
+End

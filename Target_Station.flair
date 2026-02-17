@@ -1,0 +1,298 @@
+# flair project file
+Version: 300
+Mode: fluka
+Title: ESSnuSB Plus One Magnetic Horn
+md5: 1a4219847f7bce62cf8165d9a5478e6c
+Input:
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7...
+*
+TITLE
+	ESSnuSB Plus One Magnetic Horn
+*
+#define SampleDose
+*--- Defines DT and walls
+#define xydtmin -250
+#define xydtmax 250
+#define zdtmin -200
+#define zexpmax 300
+#define zdtmax 1600
+#define w_walls 100
+#define w_vessel 10
+*
+DEFAULTS PRECISIO
+*
+* Beam definition
+* ---------------
+*  Gaussian beam, (sigma_x, sigma_y) = (0.05cm, 0.1cm)
+BEAM PROTON -2.5 0 0,, 0 1.0
+BEAMPOS , 0 0 0 0.0 0.0
+SOURCE , 29
+OPEN OLD 29
+	../BeamProfTarget.txt
+TIME-CUT , 1000000
+#include Others_inp/ESSnuSBp_ROTDEFI.inp
+*
+* Geometry
+* --------
+GEOBEGIN COMBNAME
+* Black body
+SPH blkbody 0 0 700 2000.0
+* Void Box - Exparea Box - Decay Tunnel
+RPP dt_wall =xydtmin-w_walls =xydtmax+w_walls =xydtmin-w_walls =xydtmax+w_walls \
+	 =zdtmin-w_walls =zdtmax+w_walls
+RPP dt $xydtmin $xydtmax $xydtmin $xydtmax $zdtmin $zdtmax
+RPP vessel =xydtmin-w_vessel =xydtmax+w_vessel =xydtmin-w_vessel =xydtmax+w_vessel \
+	 =zdtmin-w_vessel =zdtmax+w_vessel
+RPP exparea $xydtmin $xydtmax $xydtmin $xydtmax $zdtmin $zexpmax
+#include Others_inp/ESSnuSBp_bodies.inp
+END
+* Black hole
+REGION BLKBODY 5
+	+blkbody -dt_wall -ttwall
+REGION DTLAYOUT 5
+	+dt_wall -dt -vessel -ttline |+ttwall -ttline -vessel
+REGION EXPAREA 5
+	+exparea-thbox
+REGION DT 5
+	+dt -exparea -clmt -magnet -bdump
+REGION VESSEL 5
+	+vessel -dt -ttline |+ttline -ttvessel -dt
+#include Others_inp/ESSnuSBp_regions.inp
+END
+GEOEND
+*
+* Material definitions
+* --------------------
+MATERIAL POTASSIU 19. -39.0983 0.862
+MATERIAL CHROMIUM 24. -51.9961 7.18
+MATERIAL MANGANES 25. -54.938049 7.21
+MATERIAL PHOSPHO 15. -30.973761 1.82
+MATERIAL SULFUR 16. -32.066 2.07
+MATERIAL TITAN60 22.,, 3.
+* Steel316LN
+* Stainless steel AISI316LN
+MATERIAL SS316LN,,, 7.8
+COMPOUND SS316LN -0.67145 IRON -0.185 CHROMIUM -0.1125 NICKEL -0.02 MANGANES -0.01 \
+	 SILICON -0.00045 PHOSPHO -0.0003 SULFUR -0.0003 CARBON
+*
+* Concrete portland
+* -----------------
+MATERIAL PORTLAND,,, 2.3
+COMPOUND PORTLAND -0.01 HYDROGEN -0.001 CARBON -0.529107 OXYGEN -0.016 SODIUM -0.002 \
+	 MAGNESIU -0.033872 ALUMINUM -0.337021 SILICON -0.013 POTASSIU \
+	 -0.044 CALCIUM -0.014 IRON
+ASSIGNMA , BLCKHOLE BLKBODY
+ASSIGNMA , PORTLAND DTLAYOUT
+ASSIGNMA , HELIUM EXPAREA
+ASSIGNMA , HELIUM DT
+ASSIGNMA , IRON VESSEL
+#include Others_inp/ESSnuSBp_materials.inp
+MAT-PROP USERDIRE 1,,, VACUUM @LASTMAT
+* * Activation calculations
+* -----------------------
+PHYSICS EVAPORAT 3.
+PHYSICS COALESCE 1.
+PHYSICS PEATHRES
+*
+* Electromagnetic thresholds
+* --------------------------
+*         prompt     decay
+*  e+/-   10 MeV    100keV
+*  gamma   5 MeV     50keV
+EMFCUT PROD-CUT -1E-05 5E-5 1. VACUUM @LASTMAT
+EMFCUT , -1E-05 5E-5,, BLKBODY @LASTREG
+RADDECAY , 1,,,, 99999
+DCYTIMES , 1 60 3600 -1
+IRRPROFI , 17280000 3.12E15
+*
+* Photonuclear interactions
+* -------------------------
+PHOTONUC , 1.,,, BLCKHOLE @LASTMAT
+*
+* Hadronic thresholds
+* -------------------
+PART-THR , -10.0E-6 PROTON APROTON
+PART-THR , -10.0E-6 ANEUTRON @LASTPAR
+*Score the Energy in all regions
+SCORE , DOSE,,, ENERGY
+!USRBIN PipTarg 10 PION+ -90 350 350 300 -350 -350 -300 350 350 300
+!USRBIN PipCD 10 PION+ -91 350 350 600 -350 -350 300 350 350 150
+!USRBIN PipDT 10 PION+ -92 350 350 1100 -350 -350 600 350 350 250
+!USRBIN pipTT 10 PION+ -93 -250 200 1700 -900 -200 700 325 200 500
+!USRBIN Proton 10 PROTON -99 350 350 1100 -350 -350 600 350 350 250
+USRBIN Pip 10 PION+ -98 350 350 1700 -900 -350 0 625 350 850
+USRBIN Proton 10 PROTON -99 350 350 1700 -900 -350 0 625 350 850
+*
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7....+....8
+RANDOMIZ , 1 1
+START , 20000,,,, 0.0
+EndInput
+
+Page: Flair
+plotengine: Gnuplot
+Compile: fluka_0.76T_dipole
+	link: ldpmqmd
+	source: ['usrfiles/magfld.f', 'usrfiles/source.f', 'usrfiles/usrini.f', 'usrfiles/usrmed.f', 'usrfiles/usrout.f']
+End
+
+# Run information
+Run: <default>
+	Exe:      fluka_0.76T_dipole
+	Last:     10
+	StartRun: 1771237226.485926
+	open:     1
+
+	# USRxxx data file: Target_Station_99.bnn
+	Data: \I_\U\e
+		Unit: 99
+		Type: usrbin
+	End
+
+	# USRxxx data file: Target_Station_98.bnn
+	Data: \I_\U\e
+		Unit: 98
+		Type: usrbin
+	End
+End
+Geometry: Geometry
+	Frame.tsplit: 0.0
+	Frame.vsplit: 1.0
+	Layer: Borders
+		Palette: 1
+		Palette._visible: 1
+		Palette.cpd: 0
+		Palette.max: 0.0001
+		Palette.min: 1e-09
+		Usrbin: 1
+		Usrbin._visible: 1
+		Usrbin.file: results/local_1_EinHorn/ESSnuSB_layout_56.bnn
+		Usrbin.norm: 1
+		Usrbin10: 1
+		Usrbin10._visible: 1
+		Usrbin10.file: results/local_1_EinHorn/ESSnuSB_layout_60.bnn
+		Usrbin2: 1
+		Usrbin2._visible: 1
+		Usrbin2.file: results/local_1_EinHorn/ESSnuSB_layout_57.bnn
+		Usrbin3: 1
+		Usrbin3._visible: 1
+		Usrbin3.file: results/local_1_EinHorn/ESSnuSB_layout_58.bnn
+		Usrbin4: 1
+		Usrbin4._visible: 1
+		Usrbin4.file: results/local_1_EinHorn/ESSnuSB_layout_59.bnn
+		Usrbin5: 1
+		Usrbin5._visible: 1
+		Usrbin5.file: results/local_1_EinHorn/ESSnuSB_layout_61.bnn
+		Usrbin6: 1
+		Usrbin6._visible: 1
+		Usrbin6.file: results/local_1_EinHorn/ESSnuSB_layout_62.bnn
+		Usrbin7: 1
+		Usrbin7._visible: 1
+		Usrbin7.file: results/local_1_EinHorn/ESSnuSB_layout_63.bnn
+		Usrbin8: 1
+		Usrbin8._visible: 1
+		Usrbin8.file: results/local_1_EinHorn/ESSnuSB_layout_64.bnn
+		Usrbin9: 1
+		Usrbin9._visible: 1
+		Usrbin9.file: results/local_1_EinHorn/ESSnuSB_layout_65.bnn
+	End
+	Layer: Media
+		Usrbin.file: ESSnuSB_layout_54.bnn
+		Usrbin.norm: 1
+	End
+	Layer: 3D
+		3D: 1
+		3D._visible: 1
+		3D.edgedetect: 1
+		Options.viewport: 0
+		Show: 0
+		Show.lattice: 1
+		Show.voxel: 1
+	End
+End
+
+# Plots information
+Plot: Red
+	Type: Geometry
+	basisu: 0 0 1
+	coord: Z-Y
+	extends: 578.7037037036997 350115.74074073834
+	grid: 0
+	group: Geometry
+	layer: Media
+	open: 1
+	origin: 0 -63.1691 382.166
+	vectscale: 0.5
+End
+Plot: Green
+	Type: Geometry
+	basisu: 0 0 1
+	basisv: 1 0 0
+	coord: Z-X
+	extends: 695.2580393619717 454.2452632980485
+	group: Geometry
+	layer: Media
+	open: 1
+	origin: -284.413 -2.83276 1166.72
+End
+Plot: Blue
+	Type: Geometry
+	basisv: -0 0.999999 0.00134271
+	coord: X-Y
+	extends: 751.2207351721579 1.6225069874128681
+	group: Geometry
+	layer: Media
+	open: 1
+	origin: 34.0064 -154.59 975.341
+End
+Plot: Magenta
+	Type: Geometry
+	basisu: 0.89175 -0.13482 0.431979
+	basisv: 0.23745 0.952023 -0.193052
+	extends: 682.5980392156855 1.4742938212001846
+	group: Geometry
+	layer: 3D
+	open: 1
+	origin: -217.525 41.9008 956.622
+End
+Plot: ESSnuSB_layout_plot
+	Type: Geometry
+	basisu: 0 0 1
+	basisv: 1 0 0
+	coord: Z-X
+	extends: 40 5
+	grid: 0
+	labels: 0
+	nu: 2000
+	nv: 300
+	open: 1
+	origin: 0 0 39
+	title: Plot Geometry
+End
+Plot: Target_Station_99_plot
+	Type: USRBIN
+	cblog: 1
+	cbtics: 1
+	datafile: Target_Station_99.bnn
+	grid: 0
+	hist: 2D Projection
+	int: 733.41629053454028
+	max: 5.64890215E-04
+	min: 9.80599709E-15
+	open: 1
+	proj: Y
+	title: USRBIN Target Station 99
+End
+Plot: Target_Station_98_plot
+	Type: USRBIN
+	cblog: 1
+	cbtics: 1
+	datafile: Target_Station_98.bnn
+	grid: 0
+	hist: 2D Projection
+	int: 125.70592945851810
+	max: 3.34290162E-05
+	min: 3.33674893E-11
+	open: 1
+	proj: Y
+	title: USRBIN Target Station 98
+End

@@ -1,0 +1,16 @@
+# flair project file
+Version: 300
+Mode: fluka
+md5: 6f8e2d37438c8228dbb88c7a7dc72dcd
+Input:
+*
+* ----- TTline ROTDEFINE -----
+*
+ROT-DEFI ttline 200 0 29.5 224.0770 0 726.9984
+EndInput
+
+Page: Flair
+
+# Run information
+Run: <default>
+End

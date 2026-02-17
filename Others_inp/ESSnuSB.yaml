@@ -1,0 +1,104 @@
+################################
+##### Target/Canister/Horn #####
+########## UNIT: [cm] ##########
+
+Horn :
+    # R_box x L_box is the global volume englobing the Horn, the Canister and the Target
+    # It is needed because easier to define regions
+    R_box : 70
+    L_box : 290
+    z : [ 6.1, 71.08, 117.88, 178.18, 225.68, 226.76, 232.2, 237.64, 243.08, 248.52,
+          6.1, 71.08, 117.88, 178.18, 225.68, 226.76, 232.2, 237.64, 243.08, 248.52,
+          7.1, 71.08, 117.88, 178.18, 225.68, 226.76, 232.2, 237.64, 243.08, 248.52,
+          7.1, 71.08, 117.88, 178.18, 225.68, 226.76, 232.2, 237.64, 243.08, 248.52]    
+    dz : [  64.98, 46.8, 60.3, 47.5, 1.08, 5.44, 5.44, 5.44, 5.44, 5.74,
+            64.98, 46.8, 60.3, 47.5, 1.08, 5.44, 5.44, 5.44, 5.44, 5.74,
+            63.98, 46.8, 60.3, 47.5, 1.08, 5.44, 5.44, 5.44, 5.44, 5.44,
+            63.98, 46.8, 60.3, 47.5, 1.08, 5.44, 5.44, 5.44, 5.44, 5.44]
+    R0 : [58.7, 58.7, 58.7, 58.7, 58.7, 58.0, 57.46, 55.76, 52.63, 47.32,
+          4.2, 4.2, 23.3, 23.3, 4.2, 4.2, 3.54, 5.24, 8.37, 13.68,
+          57.7, 57.7, 57.7, 57.7, 57.7, 57.7, 57.15, 55.43, 52.26, 46.82,
+          4.5, 4.5, 23.6, 23.6, 4.5, 4.5, 3.85, 5.57, 8.74, 14.18]
+    Rf : [  58.7, 58.7, 58.7, 58.7, 58.0, 57.46, 55.76, 52.63, 47.32, 30.5,
+            4.2, 23.3, 23.3, 4.2, 4.2, 3.54, 5.24, 8.37, 13.68, 30.5,
+            57.7, 57.7, 57.7, 57.7, 57.7, 57.15, 55.43, 52.26, 46.82, 30.5,
+            4.5, 23.6, 23.6, 4.5, 4.5, 3.85, 5.57, 8.74, 14.18, 30.5]    
+Canister:
+    R_sup : 3.9
+    L_sup : 78.2
+    R_inf : 3.8
+    L_inf : 78
+    R_skin: 1.6
+    L_skin: 78
+    w_skin: 0.1
+Target: 
+    R : 1.5
+    L : 78
+
+### end Target/canister/Horn ###
+################################
+################################
+########## Collimator ##########
+########## UNIT: [cm] ##########
+
+Collimator:
+    # x,y,z is the global volume but also the total volume occupied by the CLMT
+    x   : [-250, 250]
+    y   : [-250, 250]
+    z   : [300, 450]
+    R   : 30
+    R_w : 50 # width of tungten ring (W ring) is R_w - R
+
+######## end Collimator ########
+################################
+################################
+############ Dipole ############
+########## UNIT: [cm] ##########
+
+Dipole:
+    # x,y,z is the global volume but also the total volume occupied by the Dipole
+    x        : [-200, 250]
+    y        : [-200, 200]
+    z        : [450, 600]
+    
+    xcoils   : [-200, 100] # also xairgap
+    ycoils   : [-100, 100] # also yfecoil
+
+    w_ycoils : 40 # width (in y) of the coils
+    w_coils  : 20 # width of the coils (turning around fecoil)
+
+########## end Dipole ##########
+################################
+################################
+######## BeamDump & t2r ########
+########## UNIT: [cm] ##########
+
+# BeamDump and t2r are defined together because the t2r 
+# is defined such that it doesn't touch the BeamDump. 
+
+BeamDump:
+    x    : [-250, 250]
+    y    : [-250, 250]
+    z0   : 1100
+    width: 300
+    
+t2r:
+    width   : 200  # x, y extents = +/- width/2 
+    length  : 1000 # start from 0 before transformation
+    theta   : -29.5 # angle of deviation
+    w_walls : 100  # /!\ take care to have the same value as in .flair /!\ -> this variable is also a parameter of the .flair
+    w_vessel: 10   # /!\ take care to have the same value as in .flair /!\ -> this variable is also a parameter of the .flair
+                   # If running FLUKA without FLAIR, this applies for the .inp final file
+
+###### end BeamDump & t2r ######
+################################
+
+
+
+
+
+
+
+
+
+

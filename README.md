@@ -16,5 +16,5 @@ Current Energy Deposition [GeV/cm3] for 10k primaries - last update: 09/03/2026
 Current proton fluence [N/cm3] for 10 k primaries - last update: 09/03/2026
 <img width="990" height="410" alt="p_fluence" src="https://github.com/user-attachments/assets/b47d25c2-0d42-4a10-8003-fa04ff7d3692" />
 
-Current <img width="992" height="411" alt="pip_fluence" src="https://github.com/user-attachments/assets/864dc915-852f-4f6f-b335-652410619f04" />
-pion+ fluence [N/cm3] for 10 k primaries - last update: 09/03/2026
+Current pion+ fluence [N/cm3] for 10 k primaries - last update: 09/03/2026
+<img width="992" height="411" alt="pip_fluence" src="https://github.com/user-attachments/assets/864dc915-852f-4f6f-b335-652410619f04" />

@@ -1,8 +1,23 @@
 # flair project file
 Version: 300
 Mode: fluka
-md5: 3ce211bd4ec2e7b4d88a041ff29ec570
+md5: 3416f196dcfae769099cbaaea54b8e39
 Input:
+*
+* ----- BlackBody_DecayTunnel regions -----
+*
+REGION BLKBODY 5
+	+blkbody -dt_wall -ttwall | +blkprk -vacprk
+REGION PARKING 5
+	+vacprk -blkbody -mqavol
+REGION DTLAYOUT 5
+	+dt_wall -dt -vessel -ttline |+ttwall -ttline -vessel
+REGION EXPAREA 5
+	+exparea -thbox
+REGION DT 5
+	+dt -exparea -clmt -magnet -bdump -quad1 -quad2 -quad3
+REGION VESSEL 5
+	+vessel -dt -ttline |+ttline -ttvessel -dt
 *
 * ----- Target and Horn regions -----
 *
@@ -50,7 +65,7 @@ REGION CLMTHOLE 5
 REGION CLMTW 5
 	+clmtW -hclmt
 *
-* ----- Dipole regions -----
+* ----- Magnet regions -----
 *
 REGION MAGNET 5
 	+magnet -airgap -(coils-Fecoils)
@@ -59,12 +74,39 @@ REGION COIL 5
 REGION BFIELD 5
 	+airgap
 *
-* ----- BeamDump and TTline regions -----
+* ----- Beam Dump regions -----
 *
 REGION BDUMP 5
 	+bdump
+*
+* ----- t2r regions -----
+*
 REGION TTLINE 5
-	+ttvessel -dt
+	+ttvessel -dt -quad1 -quad2 -quad3 -quad4 -quad5 -quad6 -quad7
+*
+* ----- Quad regions -----
+*
+REGION MQAVOL 5
+	+mqavol -mqafe
+REGION MQAFE 5
+	+mqafe -mqavac
+REGION MQAVAC 5
+	+mqavac
+	@select=1
+REGION QUAD1 5
+	+quad1
+REGION QUAD2 5
+	+quad2
+REGION QUAD3 5
+	+quad3
+REGION QUAD4 5
+	+quad4
+REGION QUAD5 5
+	+quad5
+REGION QUAD6 5
+	+quad6
+REGION QUAD7 5
+	+quad7
 EndInput
 
 Page: Flair

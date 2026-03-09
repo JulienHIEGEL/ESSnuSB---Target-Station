@@ -1,12 +1,22 @@
 # flair project file
 Version: 300
 Mode: fluka
-md5: 6f8e2d37438c8228dbb88c7a7dc72dcd
+md5: 8ff6b259954d8c0d6c3e51374fb4f5cb
 Input:
 *
-* ----- TTline ROTDEFINE -----
+* ----- t2r transforms -----
 *
-ROT-DEFI ttline 200 0 29.5 224.0770 0 726.9984
+ROT-DEFI ttline 200 0 29.5 276.3499 0 819.3904
+*
+* ----- Quad transforms -----
+*
+ROT-DEFI trquad1 200 0 29.5 276.3499 0 2847.4936
+ROT-DEFI trquad2 200 0 29.5 276.3499 0 2947.6936
+ROT-DEFI trquad3 200 0 29.5 276.3499 0 3047.8936
+ROT-DEFI trquad4 200 0 29.5 276.3499 0 3148.0936
+ROT-DEFI trquad5 200 0 29.5 276.3499 0 3248.2936
+ROT-DEFI trquad6 200 0 29.5 276.3499 0 3348.4936
+ROT-DEFI trquad7 200 0 29.5 276.3499 0 3448.6936
 EndInput
 
 Page: Flair

@@ -1,8 +1,14 @@
 # flair project file
 Version: 300
 Mode: fluka
-md5: 515dae6d02f529630ac92353e3899a9b
+md5: 7e1d61a3f0e68be4ace41780d9066f68
 Input:
+ASSIGNMA , BLCKHOLE BLKBODY
+ASSIGNMA , VACUUM PARKING
+ASSIGNMA , PORTLAND DTLAYOUT
+ASSIGNMA , HELIUM EXPAREA
+ASSIGNMA , HELIUM DT
+ASSIGNMA , IRON VESSEL
 *
 * ----- Target and Horn materials -----
 *
@@ -14,23 +20,29 @@ ASSIGNMA , HELIUM THBOX
 ASSIGNMA , ALUMINUM RHALUP
 ASSIGNMA , HELIUM RHBF,,, 1.
 ASSIGNMA , HELIUM RHIN
-*
-* ----- Collimator materials -----
-*
 ASSIGNMA , IRON CLMT
 ASSIGNMA , HELIUM CLMTHOLE
 ASSIGNMA , TUNGSTEN CLMTW
 *
-* ----- Dipole materials -----
+* ----- Magnet materials -----
 *
 ASSIGNMA , IRON MAGNET
 ASSIGNMA , HELIUM BFIELD,,, 1.
 ASSIGNMA , COPPER COIL
 *
-* ----- BeamDump and TTline materials -----
+* ----- Beam Dump materials -----
 *
 ASSIGNMA , CARBON BDUMP
+*
+* ----- t2r materials -----
+*
 ASSIGNMA , HELIUM TTLINE
+*
+* ----- Quad materials -----
+*
+ASSIGNMA , HELIUM MQAVOL
+ASSIGNMA , IRON MQAFE
+ASSIGNMA , VACUUM MQAVAC
 EndInput
 
 Page: Flair

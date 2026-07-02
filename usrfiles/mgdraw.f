@@ -1,5 +1,3 @@
-*$ CREATE MGDRAW.FOR
-*COPY MGDRAW
 *                                                                      *
 *=== mgdraw ===========================================================*
 *                                                                      *
@@ -11,18 +9,12 @@
 *
 *----------------------------------------------------------------------*
 *                                                                      *
-*     Copyright (C) 1990-2013      by        Alfredo Ferrari           *
+*     Copyright (C) 2022: CERN                                         *
 *     All Rights Reserved.                                             *
-*                                                                      *
 *                                                                      *
 *     MaGnetic field trajectory DRAWing: actually this entry manages   *
 *                                        all trajectory dumping for    *
 *                                        drawing                       *
-*                                                                      *
-*     Created on   01 March 1990   by        Alfredo Ferrari           *
-*                                              INFN - Milan            *
-*     Last change   12-Nov-13      by        Alfredo Ferrari           *
-*                                              INFN - Milan            *
 *                                                                      *
 *----------------------------------------------------------------------*
 *
@@ -37,13 +29,28 @@
       INCLUDE 'quemgd.inc'
       INCLUDE 'sumcou.inc'
       INCLUDE 'trackr.inc'
-*
-      DIMENSION DTQUEN ( MXTRCK, MAXQMG )
-*
-      CHARACTER*20 FILNAM
-      LOGICAL LFCOPE
-      SAVE LFCOPE
-      DATA LFCOPE / .FALSE. /
+      
+      LOGICAL FIRST 
+      SAVE FIRST 
+      DATA FIRST /.TRUE./
+
+      IF (FIRST) THEN 
+          OPEN(98, FILE='track_param.dat', STATUS='UNKNOWN') 
+          OPEN(99, FILE='track_pos.dat', STATUS='UNKNOWN') 
+          FIRST = .FALSE. 
+      ENDIF    
+
+
+      
+      WRITE (98,*) NTRACK, MTRACK, JTRACK, SNGL (ETRACK), SNGL (WTRACK), SNGL (CTRACK)
+
+      DO I = 1, NTRACK
+         WRITE(99,*) XTRACK(I), YTRACK(I), ZTRACK(I), CXTRCK, CYTRCK, CZTRCK, PTRACK
+      ENDDO
+
+c     ( SNGL (DTRACK (I)), I = 1, MTRACK )
+
+
 *
 *----------------------------------------------------------------------*
 *                                                                      *
@@ -55,34 +62,6 @@
 *                                                                      *
 *----------------------------------------------------------------------*
 *                                                                      *
-      IF ( .NOT. LFCOPE ) THEN
-         LFCOPE = .TRUE.
-c         IF ( KOMPUT .EQ. 2 ) THEN
-c            FILNAM = '/'//CFDRAW(1:8)//' DUMP A'
-c         ELSE
-c            FILNAM = CFDRAW
-c         END IF
-c         OPEN ( UNIT = IODRAW, FILE = FILNAM, STATUS = 'NEW', FORM =
-c     &          'UNFORMATTED' )
-      END IF
-c      WRITE (IODRAW) NTRACK, MTRACK, JTRACK, SNGL (ETRACK),
-c     &               SNGL (WTRACK)
-c      WRITE (IODRAW) ( SNGL (XTRACK (I)), SNGL (YTRACK (I)),
-c     &                 SNGL (ZTRACK (I)), I = 0, NTRACK ),
-c     &               ( SNGL (DTRACK (I)), I = 1, MTRACK ),
-c     &                 SNGL (CTRACK)
-*  +-------------------------------------------------------------------*
-*  |  Quenching is activated
-      IF ( LQEMGD ) THEN
-         IF ( MTRACK .GT. 0 ) THEN
-            RULLL  = ZERZER
-            CALL QUENMG ( ICODE, MREG, RULLL, DTQUEN )
-c            WRITE (IODRAW) ( ( SNGL (DTQUEN (I,JBK)), I = 1, MTRACK ),
-c     &                         JBK = 1, NQEMGD )
-         END IF
-      END IF
-*  |  End of quenching
-*  +-------------------------------------------------------------------*
       RETURN
 *
 *======================================================================*
@@ -125,6 +104,7 @@ c     &                         JBK = 1, NQEMGD )
 *             13: pseudo-neutron deposition                            *
 *             14: escape                                               *
 *             15: time kill                                            *
+*             16: recoil from (heavy) bremsstrahlung                   *
 *     Icode = 2x: call from Emfsco                                     *
 *             20: local energy deposition (i.e. photoelectric)         *
 *             21: below threshold, iarg=1                              *
@@ -148,28 +128,6 @@ c     &                         JBK = 1, NQEMGD )
 *======================================================================*
 *                                                                      *
       ENTRY ENDRAW ( ICODE, MREG, RULL, XSCO, YSCO, ZSCO )
-      IF ( .NOT. LFCOPE ) THEN
-         LFCOPE = .TRUE.
-c         IF ( KOMPUT .EQ. 2 ) THEN
-c            FILNAM = '/'//CFDRAW(1:8)//' DUMP A'
-c         ELSE
-c            FILNAM = CFDRAW
-c         END IF
-c         OPEN ( UNIT = IODRAW, FILE = FILNAM, STATUS = 'NEW', FORM =
-c     &          'UNFORMATTED' )
-      END IF
-c      WRITE (IODRAW)  0, ICODE, JTRACK, SNGL (ETRACK), SNGL (WTRACK)
-c      WRITE (IODRAW)  SNGL (XSCO), SNGL (YSCO), SNGL (ZSCO), SNGL (RULL)
-*  +-------------------------------------------------------------------*
-*  |  Quenching is activated : calculate quenching factor
-*  |  and store quenched energy in DTQUEN(1, jbk)
-      IF ( LQEMGD ) THEN
-         RULLL = RULL
-         CALL QUENMG ( ICODE, MREG, RULLL, DTQUEN )
-c         WRITE (IODRAW) ( SNGL (DTQUEN(1, JBK)), JBK = 1, NQEMGD )
-      END IF
-*  |  end quenching
-*  +-------------------------------------------------------------------*
       RETURN
 *
 *======================================================================*
@@ -179,64 +137,6 @@ c         WRITE (IODRAW) ( SNGL (DTQUEN(1, JBK)), JBK = 1, NQEMGD )
 *======================================================================*
 *
       ENTRY SODRAW
-      IF ( .NOT. LFCOPE ) THEN
-         LFCOPE = .TRUE.
-c         IF ( KOMPUT .EQ. 2 ) THEN
-c            FILNAM = '/'//CFDRAW(1:8)//' DUMP A'
-c         ELSE
-c            FILNAM = CFDRAW
-c         END IF
-c         OPEN ( UNIT = IODRAW, FILE = FILNAM, STATUS = 'NEW', FORM =
-c     &          'UNFORMATTED' )
-      END IF
-c      WRITE (IODRAW) -NCASE, NPFLKA, NSTMAX, SNGL (TKESUM),
-c     &                SNGL (WEIPRI)
-*  +-------------------------------------------------------------------*
-*  |  (Radioactive) isotope: it works only for 1 source particle on
-*  |  the stack for the time being
-      IF ( ILOFLK (NPFLKA) .GE. 100000 .AND. LRADDC (NPFLKA) ) THEN
-         IARES  = MOD ( ILOFLK (NPFLKA), 100000  )  / 100
-         IZRES  = MOD ( ILOFLK (NPFLKA), 10000000 ) / 100000
-         IISRES = ILOFLK (NPFLKA) / 10000000
-         IONID  = ILOFLK (NPFLKA)
-c         WRITE (IODRAW) ( IONID,SNGL(-TKEFLK(I)),
-c     &                    SNGL (WTFLK(I)), SNGL (XFLK (I)),
-c     &                    SNGL (YFLK (I)), SNGL (ZFLK (I)),
-c     &                    SNGL (TXFLK(I)), SNGL (TYFLK(I)),
-c     &                    SNGL (TZFLK(I)), I = 1, NPFLKA )
-*  |
-*  +-------------------------------------------------------------------*
-*  |  Patch for heavy ions: it works only for 1 source particle on
-*  |  the stack for the time being
-      ELSE IF ( ABS (ILOFLK (NPFLKA)) .GE. 10000 ) THEN
-         IONID = ILOFLK (NPFLKA)
-         CALL DCDION ( IONID )
-c         WRITE (IODRAW) ( IONID,SNGL(TKEFLK(I)+AMNHEA(-IONID)),
-c     &                    SNGL (WTFLK(I)), SNGL (XFLK (I)),
-c     &                    SNGL (YFLK (I)), SNGL (ZFLK (I)),
-c     &                    SNGL (TXFLK(I)), SNGL (TYFLK(I)),
-c     &                    SNGL (TZFLK(I)), I = 1, NPFLKA )
-*  |
-*  +-------------------------------------------------------------------*
-*  |  Patch for heavy ions: ???
-c      ELSE IF ( ILOFLK (NPFLKA) .LT. -6 ) THEN
-c         WRITE (IODRAW) ( IONID,SNGL(TKEFLK(I)+AMNHEA(-ILOFLK(NPFLKA))),
-c     &                    SNGL (WTFLK(I)), SNGL (XFLK (I)),
-c     &                    SNGL (YFLK (I)), SNGL (ZFLK (I)),
-c     &                    SNGL (TXFLK(I)), SNGL (TYFLK(I)),
-c     &                    SNGL (TZFLK(I)), I = 1, NPFLKA )
-*  |
-*  +-------------------------------------------------------------------*
-*  |
-c      ELSE
-c         WRITE (IODRAW) ( ILOFLK(I), SNGL (TKEFLK(I)+AM(ILOFLK(I))),
-c     &                    SNGL (WTFLK(I)), SNGL (XFLK (I)),
-c     &                    SNGL (YFLK (I)), SNGL (ZFLK (I)),
-c     &                    SNGL (TXFLK(I)), SNGL (TYFLK(I)),
-c     &                    SNGL (TZFLK(I)), I = 1, NPFLKA )
-      END IF
-*  |
-*  +-------------------------------------------------------------------*
       RETURN
 *
 *======================================================================*
@@ -250,7 +150,7 @@ c     &                    SNGL (TZFLK(I)), I = 1, NPFLKA )
 *             103: delta ray  generation secondaries                   *
 *             104: pair production secondaries                         *
 *             105: bremsstrahlung  secondaries                         *
-*             110: decay products                                      *
+*             110: radioactive decay products                          *
 *     Icode = 20x: call from Emfsco                                    *
 *             208: bremsstrahlung secondaries                          *
 *             210: Moller secondaries                                  *
@@ -261,11 +161,15 @@ c     &                    SNGL (TZFLK(I)), I = 1, NPFLKA )
 *             219: Compton scattering     secondaries                  *
 *             221: photoelectric          secondaries                  *
 *             225: Rayleigh scattering    secondaries                  *
-*             237: mu pair     production secondaries                  *
+*             237: mu pair production     secondaries                  *
 *     Icode = 30x: call from Kasneu                                    *
 *             300: interaction secondaries                             *
 *     Icode = 40x: call from Kashea                                    *
 *             400: delta ray  generation secondaries                   *
+*     Icode = 50x: call from synstp                                    *
+*             500: synchrotron radiation photons from e-/e+            *
+*             501: synchrotron radiation photons from other charged    *
+*                  particles                                           *
 *  For all interactions secondaries are put on GENSTK common (kp=1,np) *
 *  but for KASHEA delta ray generation where only the secondary elec-  *
 *  tron is present and stacked on FLKSTK common for kp=npflka          *
@@ -273,51 +177,7 @@ c     &                    SNGL (TZFLK(I)), I = 1, NPFLKA )
 *======================================================================*
 *
       ENTRY USDRAW ( ICODE, MREG, XSCO, YSCO, ZSCO )
-ccc      IF ( .NOT. LFCOPE ) THEN
-ccc         LFCOPE = .TRUE.
-ccc         IF ( KOMPUT .EQ. 2 ) THEN
-ccc            FILNAM = '/'//CFDRAW(1:8)//' DUMP A'
-ccc         ELSE
-ccc            FILNAM = CFDRAW
-ccc         END IF
-ccc         OPEN ( UNIT = IODRAW, FILE = FILNAM, STATUS = 'NEW', FORM =
-ccc     &          'UNFORMATTED' )
-ccc      END IF
-* No output by default:
-
-*
-* bat returns
-
-      if((icode.ne.102).and.(icode.ne.101))return
-
-
-      do 100 ip=1,np
-
-        id=kpart(ip)
-
-
-* write out neutrinos
-
-        if( ((id.eq.5).or.(id.eq.6).or.
-     &(id.eq.27).or.(id.eq.28)) )then
-
-          px=cxr(ip)*plr(ip)
-          py=cyr(ip)*plr(ip)
-          pz=czr(ip)*plr(ip)
-
-          ww =wei(ip)
-
-          write(80,1000,err=999)id,jtrack,xsco,ysco,zsco,
-     &px,py,pz,ww,ptrack,atrack
- 
-         endif
-
-
- 100  continue
-
- 1000 format(2(1x,i4),9(1x,e15.7))
- 999  continue
-    
       RETURN
 *=== End of subrutine Mgdraw ==========================================*
       END
+

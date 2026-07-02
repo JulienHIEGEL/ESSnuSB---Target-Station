@@ -27,7 +27,7 @@
       INCLUDE 'cmemfl.inc'
       INCLUDE 'csmcry.inc'
 
-      double precision bx, by, bz, current, r2
+      double precision bx, by, bz, current, r2, mu, sigma, A
       character*8 mregn
 
 *
@@ -59,10 +59,14 @@
        bty = by/b
        btz = bz/b
       END IF
-
+      
+      mu = 525
+      sigma = 40
+      A = 1.18
       IF (mregn.EQ."BFIELD  ") THEN
        bx = 0.
-       by = 0.759
+       by =  A * EXP( - ((z - mu)**2) / (2.0 * sigma**2) )
+       by = 0.76
        bz = 0.
        b = sqrt(bx*bx+by*by)
        btx = bx/b

@@ -1,7 +1,7 @@
 # flair project file
 Version: 300
 Mode: fluka
-md5: 3416f196dcfae769099cbaaea54b8e39
+md5: de982761625735ed8fe78b59e4735241
 Input:
 *
 * ----- BlackBody_DecayTunnel regions -----
@@ -15,7 +15,8 @@ REGION DTLAYOUT 5
 REGION EXPAREA 5
 	+exparea -thbox
 REGION DT 5
-	+dt -exparea -clmt -magnet -bdump -quad1 -quad2 -quad3
+	+dt -exparea -clmt -magnet -DSshield -bdump -Cubdump -quad1 -quad2 -quad3
+	@select=1
 REGION VESSEL 5
 	+vessel -dt -ttline |+ttline -ttvessel -dt
 *
@@ -68,16 +69,24 @@ REGION CLMTW 5
 * ----- Magnet regions -----
 *
 REGION MAGNET 5
-	+magnet -airgap -(coils-Fecoils)
+	+magnet -(coils-Fecoils) -(Wplates-Fecoils) -airgap
 REGION COIL 5
-	+coils -Fecoils -airgap
+	+coils -Fecoils -Wplates
 REGION BFIELD 5
 	+airgap
+REGION WPLATES 5
+	+Wplates -Fecoils -airgap
+REGION DSSHIELD 5
+	+DSshield -DSairgap
+REGION DSAIRGAP 5
+	+DSairgap
 *
 * ----- Beam Dump regions -----
 *
 REGION BDUMP 5
 	+bdump
+REGION CuBDUMP 5
+	+Cubdump -bdump
 *
 * ----- t2r regions -----
 *

@@ -1,7 +1,7 @@
 # flair project file
 Version: 300
 Mode: fluka
-md5: 70ef0b2f3f5d3b4bea0283d98acac72a
+md5: 19cd6538f91f1a5fce40c3daa4b46bda
 Input:
 * ..+....1....+....2....+....3....+....4....+....5....+....6....+....7...
 *
@@ -15,11 +15,11 @@ DEFAULTS PRECISIO
 * Beam definition
 * ---------------
 *  Gaussian beam, (sigma_x, sigma_y) = (0.05cm, 0.1cm)
-BEAM PROTON -2.5 0 0,, 0 1.0
+BEAM PROTON -2.5 0 0 1.45 0 -1.0
 BEAMPOS , 0 0 0 0.0 0.0
 SOURCE , 29
 OPEN OLD 29
-	../../../BeamProfTarget.txt
+	Others_inp/BeamProfTarget.txt
 TIME-CUT , 1000000
 #include Others_inp/ESSnuSBp_ROTDEFI.inp
 *
@@ -41,6 +41,7 @@ MATERIAL MANGANES 25. -54.938049 7.21
 MATERIAL PHOSPHO 15. -30.973761 1.82
 MATERIAL SULFUR 16. -32.066 2.07
 MATERIAL TITAN60 22.,, 3.
+MATERIAL ZIRCONIU 40 -91.224 6.52
 * Steel316LN
 * Stainless steel AISI316LN
 MATERIAL SS316LN,,, 7.8
@@ -53,6 +54,8 @@ MATERIAL PORTLAND,,, 2.3
 COMPOUND PORTLAND -0.01 HYDROGEN -0.001 CARBON -0.529107 OXYGEN -0.016 SODIUM -0.002 \
 	 MAGNESIU -0.033872 ALUMINUM -0.337021 SILICON -0.013 POTASSIU \
 	 -0.044 CALCIUM -0.014 IRON
+MATERIAL CuCr1Zr,,, 8.94
+COMPOUND CuCr1Zr -0.989 COPPER -0.01 CHROMIUM -0.001 ZIRCONIU
 #include Others_inp/ESSnuSBp_materials.inp
 MAT-PROP USERDIRE 1,,, VACUUM @LASTMAT
 * * Activation calculations
@@ -68,7 +71,7 @@ PHYSICS PEATHRES
 *  gamma   5 MeV     50keV
 EMFCUT PROD-CUT -1E-05 5E-5 1. VACUUM @LASTMAT
 EMFCUT , -1E-05 5E-5,, BLKBODY @LASTREG
-RADDECAY , 1,,,, 99999
+RADDECAY , 1,,,, 0
 DCYTIMES , 1 60 3600 -1
 IRRPROFI , 17280000 3.12E15
 *
@@ -82,31 +85,94 @@ PART-THR , -10.0E-6 PROTON APROTON
 PART-THR , -10.0E-6 ANEUTRON @LASTPAR
 *Score the Energy in all regions
 SCORE , DOSE,,, ENERGY
-USRBIN Pip 10 PION+ -98 350 350 1700 -900 -350 0 625 350 850
-USRBIN E 10 ENERGY -97 350 350 1700 -900 -350 0 625 350 850
-USRBIN Proton 10 PROTON -99 350 350 1700 -900 -350 0 625 350 850
+USRBIN E 10 ENERGY -97 400 350 2000 -900 -350 0 325 175 500
+!USRBIN pi+ 10 PION+ -98 350 350 1700 -900 -350 0 625 350 850
+!USRBIN proton 10 PROTON -99 350 350 1700 -900 -350 0 625 350 850
+!USERDUMP dump 100 92 0
 *
 * ..+....1....+....2....+....3....+....4....+....5....+....6....+....7....+....8
-RANDOMIZ , 1 1
+RANDOMIZ , 1 2
 START , 2000,,,, 0.0
 EndInput
 
-Page: Flair
-Compile: 0.76T_flukaexe
+Page: Input
+plotengine: Gnuplot
+Compile: fluka_0.76T_flat
+	link: ldpmqmd
 	source: ['usrfiles/magfld.f', 'usrfiles/source.f', 'usrfiles/usrmed.f', 'usrfiles/usrini.f', 'usrfiles/usrout.f']
 End
 
 # Run information
 Run: <default>
-	Exe:      fluka_0.76T_dipole
-	Last:     1
-	Status:   4
-	StartRun: 1772206993.221655
+	Exe:      fluka_0.76T_flat
+	Last:     20
+	Status:   3
+	StartRun: 1782735732.7774663
 	open:     1
+
+	# USRxxx data file: Target_Station_97.bnn
+	Data: \I_\U\e
+		Unit: 97
+		Type: usrbin
+		Rule: +,results/Target_Station_40/results/by_0.76_seed1/Target_Station_40001_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed1/Target_Station_40002_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed1/Target_Station_40003_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed1/Target_Station_40004_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed1/Target_Station_40005_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed2/Target_Station_40001_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed2/Target_Station_40002_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed2/Target_Station_40003_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed2/Target_Station_40004_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed2/Target_Station_40005_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed3/Target_Station_40001_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed3/Target_Station_40002_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed3/Target_Station_40003_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed3/Target_Station_40004_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed3/Target_Station_40005_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed4/Target_Station_40001_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed4/Target_Station_40002_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed4/Target_Station_40003_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed4/Target_Station_40004_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed4/Target_Station_40005_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed5/Target_Station_40001_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed5/Target_Station_40002_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed5/Target_Station_40003_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed5/Target_Station_40004_fort.97
+		Rule: +,results/Target_Station_40/results/by_0.76_seed5/Target_Station_40005_fort.97
+	End
 End
 Geometry: Geometry
-	Frame.tsplit: 1.0
-	Frame.vsplit: 1.0
+	Layer: Borders
+		Show.color: None
+		Userdump.PION+: 1
+		Userdump.alpha: 255
+		Userdump.file: Target_Station001_dump
+		Userdump.n: 10
+		Userdump.start: 1
+	End
+	Layer: Media
+		Userdump: 1
+		Userdump.PION+: 1
+		Userdump._visible: 1
+		Userdump.file: Target_Station001_dump
+	End
+	Layer: 3D
+		3D: 1
+		3D._visible: 1
+		3D.ambient: 0
+		3D.edgedetect: 1
+		3D.shadows: 0
+		Options.grid: 0
+		Options.latticelevel: 14
+		Options.ocube: -14
+		Options.viewport: 0
+		Show: 0
+		Show.label: None
+	End
+	Layer: Lattice
+		Options.errors: 0
+		Options.viewport: 0
+	End
 End
 
 # Plots information
@@ -114,35 +180,98 @@ Plot: Red
 	Type: Geometry
 	basisu: 0 0 1
 	basisv: 1 0 0
+	cbtics: 1
 	coord: Z-X
-	extends: 743.0083706879986 487.45135147047046
+	extends: 75.0 57.4748743718593
+	grid: 0
 	group: Geometry
-	layer: Lattice
-	origin: -132.28 0 750.653
+	layer: Media
+	open: 1
+	origin: 0 -60 525
+	xlabel: z [cm]
+	ylabel: x [cm]
 End
 Plot: Green
 	Type: Geometry
-	basisu: 0.836516 0.0173377 0.547668
-	basisv: 0.224144 0.901221 -0.370891
-	extends: 891.6100448255994 734686.676936294
+	basisu: 0.937647 -0.146754 0.31509
+	basisv: 0.175223 0.982456 -0.0638466
+	cbtics: 1
+	extends: 1540.7021574586306 1183.6628665614166
 	group: Geometry
-	layer: Lattice
-	origin: -863.477 -63.2647 1094.93
+	layer: 3D
+	open: 1
+	origin: 402.358 219.144 1378.43
 End
 Plot: Blue
 	Type: Geometry
 	basisu: 0 0 1
+	cbtics: 1
 	coord: Z-Y
-	extends: 1069.9320537907197 1.7037134614501908
+	extends: 515.9780351999968 395.41030335678147
+	grid: 0
 	group: Geometry
-	layer: Lattice
-	origin: 0 -241.22 453.115
+	layer: Media
+	open: 1
+	origin: 0 -165.758 894.605
+	xlabel: z [cm]
+	ylabel: y [cm]
 End
 Plot: Magenta
 	Type: Geometry
+	cbtics: 1
 	coord: X-Y
-	extends: 743.0083706879996 1.1831343482292986
+	extends: 619.1736422399986 475.68755889974705
+	grid: 0
 	group: Geometry
 	layer: Lattice
-	origin: 93.0531 -174.987 0
+	open: 1
+	origin: 64.7391 108.458 530
+	xlabel: x [cm]
+	ylabel: y [cm]
+End
+Plot: Target_Station_97_plot
+	Type: USRBIN
+	bxmax: 252.
+	bxmin: -252.
+	bymax: 250.
+	bymin: -250.
+	bzmax: 1772.
+	bzmin: 1168.
+	cbcpd: 0
+	cblabel: P [W/cm3]
+	cblog: 1
+	cbmax: 1e-1
+	cbmin: 1e-10
+	cbtics: 1
+	datafile: Target_Station_97.bnn
+	grid: 0
+	hist: 2D Projection
+	int: 0.47596899904646905
+	max: 1.93166770E-07
+	min: 1.29769527E-13
+	norm: x * 500200.596
+	open: 1
+	swap: 1
+	xlabel: x [cm]
+	xmax: 255
+	xmin: -255
+	ylabel: y [cm]
+	ymax: 255
+	ymin: -255
+End
+Plot: Target_Station_98_plot
+	Type: USRBIN
+	cblog: 1
+	cbtics: 1
+	datafile: Target_Station_98.bnn
+	open: 1
+	title: USRBIN Target Station 98
+End
+Plot: Target_Station_99_plot
+	Type: USRBIN
+	cblog: 1
+	cbtics: 1
+	datafile: Target_Station_99.bnn
+	open: 1
+	title: USRBIN Target Station 99
 End

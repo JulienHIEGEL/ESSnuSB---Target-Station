@@ -5,7 +5,7 @@ BLKBODY      5 +blkbody -dt_wall -ttwall | +blkprk -vacprk
 PARKING      5 +vacprk -blkbody -mqavol
 DTLAYOUT     5 +dt_wall -dt -vessel -ttline |+ttwall -ttline -vessel
 EXPAREA      5 +exparea -thbox
-DT           5 +dt -exparea -clmt -magnet -bdump -quad1 -quad2 -quad3
+DT           5 +dt -exparea -clmt -magnet -DSshield -bdump -Cubdump -quad1 -quad2 -quad3
 VESSEL       5 +vessel -dt -ttline |+ttline -ttvessel -dt
 *
 * ----- Target and Horn regions -----
@@ -46,13 +46,17 @@ CLMTW        5 +clmtW -hclmt
 *
 * ----- Magnet regions -----
 *
-MAGNET       5 +magnet -airgap -(coils-Fecoils)
-COIL         5 +coils -Fecoils -airgap
+MAGNET       5 +magnet -(coils-Fecoils) -(Wplates-Fecoils) -airgap
+COIL         5 +coils -Fecoils -Wplates
 BFIELD       5 +airgap
+WPLATES      5 +Wplates -Fecoils -airgap
+DSSHIELD     5 +DSshield -DSairgap
+DSAIRGAP     5 +DSairgap
 *
 * ----- Beam Dump regions -----
 *
 BDUMP        5 +bdump
+CuBDUMP      5 +Cubdump -bdump
 *
 * ----- t2r regions -----
 *

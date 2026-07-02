@@ -72,7 +72,8 @@ TARGET       5 +target
         ###########################################################
         
         self.materials += f"""MATERIAL         22.                  3.                              TITAN60
-ASSIGNMA     TITAN60    TARGET
+MATERIAL         22.                2.57                              TITAN56
+ASSIGNMA     TITAN56    TARGET
 ASSIGNMA    TITANIUM   CANIBOX
 ASSIGNMA      HELIUM  CANICOOL
 ASSIGNMA      HELIUM     THBOX

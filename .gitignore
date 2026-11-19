@@ -1,0 +1,24 @@
+# 1. ignore everything
+*
+
+# 2. allow .gitignore
+!.gitignore
+
+# 3. allow dir and their content
+!BuildFunctions/
+!BuildFunctions/**/
+!BuildFunctions/**
+
+!Others_inp/
+!Others_inp/**/
+!Others_inp/**
+
+!usrfiles/
+!usrfiles/**/
+!usrfiles/**
+
+# 4. allow files
+!Generation_Target_Station.ipynb
+!Target_Station.flair
+!Target_Station.inp
+!README.md

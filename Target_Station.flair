@@ -1,0 +1,321 @@
+# flair project file
+Version: 300
+Mode: fluka
+md5: 9b6339700a976643781cd0ed2d52cf2e
+Input:
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7...
+*
+TITLE
+	ESSnuSB Plus One Magnetic Horn
+*
+#define SampleDose
+*
+DEFAULTS PRECISIO
+*
+* Beam definition
+* ---------------
+*  Gaussian beam, (sigma_x, sigma_y) = (0.05cm, 0.1cm)
+BEAM PROTON -2.5 0 0 1.45 0 -1.0
+BEAMPOS , 0 0 0 0.0 0.0
+SOURCE , 29
+OPEN OLD 29
+	Others_inp/BeamProfTarget.txt
+TIME-CUT , 1000000
+#include Others_inp/ESSnuSBp_ROTDEFI.inp
+*
+* Geometry
+* --------
+GEOBEGIN COMBNAME
+#include Others_inp/ESSnuSBp_bodies.inp
+END
+#include Others_inp/ESSnuSBp_regions.inp
+END
+#include Others_inp/ESSnuSBp_lattices.inp
+GEOEND
+*
+* Material definitions
+* --------------------
+MATERIAL POTASSIU 19. -39.0983 0.862
+MATERIAL CHROMIUM 24. -51.9961 7.18
+MATERIAL MANGANES 25. -54.938049 7.21
+MATERIAL PHOSPHO 15. -30.973761 1.82
+MATERIAL SULFUR 16. -32.066 2.07
+MATERIAL TITAN60 22.,, 3.
+MATERIAL ZIRCONIU 40 -91.224 6.52
+* Steel316LN
+* Stainless steel AISI316LN
+MATERIAL SS316LN,,, 7.8
+COMPOUND SS316LN -0.67145 IRON -0.185 CHROMIUM -0.1125 NICKEL -0.02 MANGANES -0.01 \
+	 SILICON -0.00045 PHOSPHO -0.0003 SULFUR -0.0003 CARBON
+*
+* Concrete portland
+* -----------------
+MATERIAL PORTLAND,,, 2.3
+COMPOUND PORTLAND -0.01 HYDROGEN -0.001 CARBON -0.529107 OXYGEN -0.016 SODIUM -0.002 \
+	 MAGNESIU -0.033872 ALUMINUM -0.337021 SILICON -0.013 POTASSIU \
+	 -0.044 CALCIUM -0.014 IRON
+MATERIAL CuCr1Zr,,, 8.94
+COMPOUND CuCr1Zr -0.989 COPPER -0.01 CHROMIUM -0.001 ZIRCONIU
+MATERIAL 316LH2O,,, 7.12
+COMPOUND 316LH2O -0.9 -SS316LN -0.1 -WATER
+MATERIAL WTaH2O,,, 17.30
+COMPOUND WTaH2O -0.85 TUNGSTEN -0.1 WATER -0.05 TANTALUM
+#include Others_inp/ESSnuSBp_materials.inp
+MAT-PROP USERDIRE 1,,, VACUUM @LASTMAT
+* * Activation calculations
+* -----------------------
+PHYSICS EVAPORAT 3.
+PHYSICS COALESCE 1.
+PHYSICS PEATHRES
+MGNCREAT , 4
+MGNFIELD
+*
+* Electromagnetic thresholds
+* --------------------------
+*         prompt     decay
+*  e+/-   10 MeV    100keV
+*  gamma   5 MeV     50keV
+EMFCUT PROD-CUT -1E-05 5E-5 1. VACUUM @LASTMAT
+EMFCUT , -1E-05 5E-5,, BLKBODY @LASTREG
+RADDECAY , 1,,,, 0
+DCYTIMES , 1 60 3600 -1
+IRRPROFI , 17280000 3.12E15
+*
+* Photonuclear interactions
+* -------------------------
+PHOTONUC , 1.,,, BLCKHOLE @LASTMAT
+*
+* Hadronic thresholds
+* -------------------
+PART-THR , -10.0E-6 PROTON APROTON
+PART-THR , -10.0E-6 ANEUTRON @LASTPAR
+*Score the Energy in all regions
+SCORE , ARC-DPA 4-HELIUM ENERGY DOSE
+!USRBIN E 11 ENERGY 97 1.5,, 78 0,, 0 150 360 780
+!USRBIN Ebnn 10 ENERGY -97 400 350 1900 -900 -350 0 325 175 500
+!USRBIN CLMT 12 ARC-DPA 96 CLMT,,, CLMT,, 0
+!USRBIN CLMTW 12 ARC-DPA 96 CLMTW,,, CLMTW
+!USRBIN Magnet 12 ARC-DPA 96 MAGNET,,, MAGNET
+!USRBIN COILS 12 ARC-DPA 96 COIL,,, COIL
+USRBIN rhalup 12 ARC-DPA 96 RHALUP,,, RHALUP
+!USRBIN CLMT 12 4-HELIUM 95 CLMT,,, CLMT,,, 1 1 1
+!USRBIN CLMTW 12 4-HELIUM 95 CLMTW,,, CLMTW,,, 1 1 1
+!USRBIN WPLATES 12 4-HELIUM 95 WPLATES,,, WPLATES,,,, 1 1
+!USRBIN COIL 12 4-HELIUM 95 COIL,,, COIL,,,, 1 1
+!USRBIN MAGNET 12 4-HELIUM 95 MAGNET,,, MAGNET,,,, 1 1
+!RESNUCLE Target 3 94 5 10 TARGET
+!RESNUCLE CLMT 3 94 5 10 CLMT
+!RESNUCLE CLMTW 3 94 5 10 CLMTW
+!RESNUCLE WPLATES 3 94 5 10 WPLATES
+!RESNUCLE MAGNET 3 94 5 10 MAGNET
+!RESNUCLE COIL 3 94 5 10 COIL
+*
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7....+....8
+RANDOMIZ , 1 2
+START , 100,,,, 0.0
+*
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7....+....8
+RANDOMIZ , 1 2
+EndInput
+
+Page: Flair
+plotengine: Gnuplot
+Compile: 1.0T
+	link: ldpmqmd
+	source: ['usrfiles/magfld.f', 'usrfiles/source.f', 'usrfiles/usrmed.f', 'usrfiles/usrini.f', 'usrfiles/usrout.f']
+End
+
+# Run information
+Run: <default>
+	Exe:      1.0T
+	Last:     2
+	Status:   3
+	StartRun: 1794478459.788604
+	open:     1
+
+	# USRxxx data file: Target_Station_98.bnn
+	Data: \I_\U\e
+		Unit: 98
+		Type: usrbin
+		Rule: +,results/data_10M5primaries_DPA_4He/by_0.76_seed1/Target_Station001_fort.98
+		Rule: +,results/data_10M5primaries_DPA_4He/by_0.76_seed1/Target_Station002_fort.98
+	End
+
+	# USRxxx data file: Target_Station_99.bnn
+	Data: \I_\U\e
+		Unit: 99
+		Type: usrbin
+		Rule: +,results/data_10M5primaries_DPA_4He/by_0.76_seed1/Target_Station001_fort.99
+		Rule: +,results/data_10M5primaries_DPA_4He/by_0.76_seed1/Target_Station002_fort.99
+	End
+
+	# USRxxx data file: Target_Station_97.bnn
+	Data: \I_\U\e
+		Unit: 97
+		Type: usrbin
+		Rule: +,results/data_10M5primaries_DPA_4He/BNN/Target_Station001_fort.97
+		Rule: +,results/data_10M5primaries_DPA_4He/BNN/Target_Station002_fort.97
+	End
+
+	# USRxxx data file: Target_Station_94.rnc
+	Data: \I_\U\e
+		Unit: 94
+		Type: resnucle
+		Rule: +,\I\d\d\d_fort\.\U
+		Rule: -,Target_Station004_fort.94
+		Rule: -,Target_Station005_fort.94
+		Rule: -,Target_Station006_fort.94
+		Rule: -,Target_Station007_fort.94
+		Rule: -,Target_Station008_fort.94
+		Rule: -,Target_Station009_fort.94
+		Rule: -,Target_Station010_fort.94
+	End
+End
+Material: CuCr1Zr
+	color: #be391e
+End
+Material: 316LH2O
+	color: #636670
+End
+Material: WTaH2O
+	color: #616899
+End
+Geometry: Geometry
+	Frame.bsplit: 1.0
+	Frame.vsplit: 0.0
+	Layer: Borders
+		Show.color: None
+		Userdump.PION+: 1
+		Userdump.alpha: 255
+		Userdump.file: Target_Station001_dump
+		Userdump.n: 10
+		Userdump.start: 1
+	End
+	Layer: Media
+		Show.lattice: 1
+		Show.voxel: 1
+		Userdump.PION+: 1
+		Userdump.file: Target_Station001_dump
+	End
+	Layer: 3D
+		3D: 1
+		3D._visible: 1
+		3D.ambient: 0
+		3D.edgedetect: 1
+		3D.shadows: 0
+		Options.grid: 0
+		Options.latticelevel: 14
+		Options.ocube: -14
+		Options.viewport: 0
+		Show: 0
+		Show.label: None
+	End
+	Layer: Lattice
+		Options.errors: 0
+		Options.grid: 0
+		Options.viewport: 0
+		Show.label: None
+		Show.lattice: 1
+		Show.voxel: 1
+	End
+End
+
+# Plots information
+Plot: Red
+	Type: Geometry
+	basisu: 0 0 1
+	cbtics: 1
+	coord: Z-Y
+	extends: 187.93555010045182 0.300216533706792
+	grid: 0
+	group: Geometry
+	layer: Media
+	nu: 1000
+	nv: 1000
+	open: 1
+	origin: 0 -43.084 181.563
+	xlabel: z [cm]
+	ylabel: x [cm]
+End
+Plot: Green
+	Type: Geometry
+	basisu: 0.779113 0.0509808 0.624807
+	basisv: 0.0538015 0.987572 -0.147669
+	cbtics: 1
+	extends: 3833.759992447459 6.134015987915934
+	grid: 0
+	group: Geometry
+	layer: 3D
+	open: 1
+	origin: 1368.24 -558.583 2220.58
+End
+Plot: Blue
+	Type: Geometry
+	basisu: 0 0 1
+	basisv: 1 0 0
+	cbtics: 1
+	coord: Z-X
+	extends: 143.99999999999847 77.69784172661788
+	grid: 0
+	group: Geometry
+	layer: Media
+	nu: 1000
+	nv: 500
+	open: 1
+	origin: 12.4778 0 116.083
+	xlabel: z [cm]
+	ylabel: y [cm]
+End
+Plot: Magenta
+	Type: Geometry
+	cbtics: 1
+	coord: X-Y
+	extends: 119.99999999999973 80999.99999999981
+	grid: 0
+	group: Geometry
+	layer: Lattice
+	open: 1
+	origin: -140.598 63.5898 530
+	xlabel: x [cm]
+	ylabel: y [cm]
+End
+Plot: Target_Station_98_plot
+	Type: USRBIN
+	cblog: 1
+	cbtics: 1
+	datafile: Target_Station_98.bnn
+	title: USRBIN Target Station 98
+End
+Plot: Target_Station_99_plot
+	Type: USRBIN
+	cblog: 1
+	cbtics: 1
+	datafile: Target_Station_99.bnn
+	title: USRBIN Target Station 99
+End
+Plot: Target_Station_97_plot
+	Type: USRBIN
+	bymax: 30.
+	bymin: -30.
+	cbcpd: 0
+	cblog: 1
+	cbmax: 1e-6
+	cbmin: 1e-14
+	cbtics: 1
+	datafile: Target_Station_97.bnn
+	grid: 0
+	hist: 2D Projection
+	int: 1.0239884957853129
+	max: 1.59540141E-05
+	min: 1.02152185E-20
+	proj: Y
+	title: USRBIN Target Station 97
+End
+Plot: Target_Station_94_plot
+	Type: RESNUCLE
+	datafile: Target_Station_94.rnc
+	grid: 0
+	plot: Z
+	title: RESNUCLE Target Station 94
+	with.0: lines
+End

@@ -1,0 +1,22 @@
+# flair project file
+Version: 300
+Mode: fluka
+md5: d6fa396bedd1aaecafb0c2569c3a7391
+Input:
+*
+* ----- Quad lattice -----
+*
+LATTICE -trquad1 QUAD1,,, quadn1
+LATTICE -trquad2 QUAD2,,, quadn2
+LATTICE -trquad3 QUAD3,,, quadn3
+LATTICE -trquad4 QUAD4,,, quadn4
+LATTICE -trquad5 QUAD5,,, quadn5
+LATTICE -trquad6 QUAD6,,, quadn6
+LATTICE -trquad7 QUAD7,,, quadn7
+EndInput
+
+Page: Flair
+
+# Run information
+Run: <default>
+End

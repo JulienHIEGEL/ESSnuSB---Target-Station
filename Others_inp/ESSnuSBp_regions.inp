@@ -1,5 +1,6 @@
+
 *
-* ----- BlackBody_DecayTunnel regions -----
+* ----- BlackBody_DecayTunnel regions ----- 
 *
 BLKBODY      5 +blkbody -dt_wall -ttwall | +blkprk -vacprk
 PARKING      5 +vacprk -blkbody -mqavol
@@ -7,9 +8,11 @@ DTLAYOUT     5 +dt_wall -dt -vessel -ttline |+ttwall -ttline -vessel
 EXPAREA      5 +exparea -thbox -baffle
 DT           5 +dt -exparea -clmt -magnet -DSshield -bdump -Febdump -Cubdump -quad1 -quad2 -quad3
 VESSEL       5 +vessel -dt -ttline |+ttline -ttvessel -dt
+
 *
-* ----- Target and Horn regions -----
+* ----- Target and Horn regions ----- 
 *
+
 THBOX        5 +thbox
                -h00 -h01 -h02 -h03 -h04 -h05 -h06 -h07 -h08 -h09-tgtbox
 RHALUP       5 +h00-h20 -h30 -h10-target |+h30 -h10-tgtbox
@@ -37,19 +40,23 @@ RHIN         5 +h10-tgtbox   |+h11-tgtbox   |+h12-tgtbox   |+h13-tgtbox  |+h14-t
 CANIBOX      5 +CaniSup -CaniInf | +CaniSkin -target
 CANICOOL     5 +CaniInf -CaniSkin
 TARGET       5 +target
+
 *
-* ----- Baffle regions -----
+* ----- Baffle regions ----- 
 *
-BAFFLE       5 +baffle -baffleH
-BAFFLEH      5 +baffleH
+
+BAFFLE        5 +baffle -baffleH
+BAFFLEH       5 +baffleH
+
 *
-* ----- Collimator regions -----
+* ----- Collimator regions ----- 
 *
 CLMT         5 +clmt -hclmt -clmtW
 CLMTHOLE     5 +hclmt
 CLMTW        5 +clmtW -hclmt
+
 *
-* ----- Magnet regions -----
+* ----- Magnet regions ----- 
 *
 MAGNET       5 +magnet -(coils-Fecoils) -(Wplates-Fecoils) -airgap
 COIL         5 +coils -Fecoils -Wplates
@@ -57,19 +64,23 @@ BFIELD       5 +airgap
 WPLATES      5 +Wplates -Fecoils -airgap
 DSSHIELD     5 +DSshield -DSairgap
 DSAIRGAP     5 +DSairgap
+
 *
-* ----- Beam Dump regions -----
+* ----- Beam Dump regions ----- 
 *
-BDUMP        5 +bdump
-FeBDUMP      5 +Febdump
-CuBDUMP      5 +Cubdump -bdump -Febdump
+BDUMP       5 +bdump 
+FeBDUMP     5 +Febdump 
+CuBDUMP     5 +Cubdump -bdump -Febdump 
+
 *
-* ----- t2r regions -----
+* ----- t2r regions ----- 
 *
 TTLINE       5 +ttvessel -dt -quad1 -quad2 -quad3 -quad4 -quad5 -quad6 -quad7
+
 *
-* ----- Quad regions -----
+* ----- Quad regions ----- 
 *
+
 MQAVOL       5 +mqavol -mqafe
 MQAFE        5 +mqafe -mqavac
 MQAVAC       5 +mqavac
@@ -80,3 +91,4 @@ QUAD4        5 +quad4
 QUAD5        5 +quad5
 QUAD6        5 +quad6
 QUAD7        5 +quad7
+

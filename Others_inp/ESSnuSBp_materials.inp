@@ -4,8 +4,9 @@ ASSIGNMA    PORTLAND  DTLAYOUT
 ASSIGNMA      HELIUM   EXPAREA
 ASSIGNMA      HELIUM        DT
 ASSIGNMA        IRON    VESSEL
+
 *
-* ----- Target and Horn materials -----
+* ----- Target and Horn materials ----- 
 *
 MATERIAL         22.                  3.                              TITAN60
 MATERIAL         22.                2.57                              TITAN56
@@ -16,16 +17,19 @@ ASSIGNMA      HELIUM     THBOX
 ASSIGNMA    ALUMINUM    RHALUP
 ASSIGNMA      HELIUM      RHBF                            1.
 ASSIGNMA      HELIUM      RHIN
+
 *
-* ----- Baffle materials -----
+* ----- Baffle materials ----- 
 *
+
 ASSIGNMA      CARBON    BAFFLE
 ASSIGNMA      HELIUM   BAFFLEH
 ASSIGNMA     316LH2O      CLMT
 ASSIGNMA      HELIUM  CLMTHOLE
 ASSIGNMA      WTaH2O     CLMTW
+
 *
-* ----- Magnet materials -----
+* ----- Magnet materials ----- 
 *
 ASSIGNMA        IRON    MAGNET
 ASSIGNMA      HELIUM    BFIELD                            1.
@@ -33,19 +37,23 @@ ASSIGNMA      COPPER      COIL
 ASSIGNMA    TUNGSTEN   WPLATES
 ASSIGNMA        IRON  DSSHIELD
 ASSIGNMA      HELIUM  DSAIRGAP
+
 *
-* ----- Beam Dump materials -----
+* ----- Beam Dump materials ----- 
 *
-ASSIGNMA      CARBON     BDUMP
-ASSIGNMA        IRON   FeBDUMP
-ASSIGNMA     CuCr1Zr   CuBDUMP
+ASSIGNMA      CARBON    BDUMP
+ASSIGNMA        IRON  FeBDUMP
+ASSIGNMA     CuCr1Zr  CuBDUMP
+
 *
-* ----- t2r materials -----
+* ----- t2r materials ----- 
 *
-ASSIGNMA      HELIUM    TTLINE
+ASSIGNMA      HELIUM   TTLINE
+
 *
-* ----- Quad materials -----
+* ----- Quad materials ----- 
 *
 ASSIGNMA      HELIUM    MQAVOL
-ASSIGNMA        IRON     MQAFE
+ASSIGNMA        IRON     MQAFE                            
 ASSIGNMA      VACUUM    MQAVAC
+

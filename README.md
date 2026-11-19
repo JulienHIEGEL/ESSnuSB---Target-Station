@@ -1,3 +1,5 @@
+## Note: Figures presented below are outdated and do not represent the current status of the code.
+
 # Overview  
   
 This repository contains work related to the target station studies for the ESSnuSB+ project.  
